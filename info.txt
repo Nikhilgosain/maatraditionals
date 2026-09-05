@@ -1,0 +1,3 @@
+/api/bookings/                   → GET paginated list
+/api/bookings/[bookingId]       → GET one booking (edit view)
+/api/bookings/by-customer/[id]  → GET all bookings for a customer (for updates or summary view)

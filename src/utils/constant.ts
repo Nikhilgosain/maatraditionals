@@ -1,0 +1,60 @@
+export const ROUTES = {
+    LOGIN: "/login",
+    DASHBOARD: "/dashboard",
+    CLIENT: "/agencies",
+    CLIENT_LOGIN: "/login/client",
+};
+
+export const API_ENDPOINTS = {
+    BASE_API: "/api",
+    LOGIN: "/login",
+    LOGOUT: "/logout",
+    CATEGORIES: "/categories",
+    SUBCATEGORIES: "/subcategories",
+    BOOKINGS: "/bookings",
+    INVOICE: "/invoice",
+    UPLOAD: "/upload",
+}
+
+export const STATUS_CODE = {
+    SUCCESS: 200,
+    ERROR: 400,
+    INTERNAL_SERVER_ERROR: 500,
+    UNAUTHORIZED: 401,
+    NOT_FOUND: 404,
+    CREATED: 201,
+    CONFLICT: 409,
+    FORBIDDEN: 403,
+}
+
+export const MESSAGES = {
+    BOOKING_NOT_FOUND: "Booking not found",
+    INTERNAL_SERVER_ERROR: "Internal server error",
+    INVENTORY_NOT_AVAILABLE: "Inventory not available",
+    BOOKINGS_UPDATED_SUCCESSFULLY: "Bookings updated successfully",
+    BOOKINGS_DELETED_SUCCESSFULLY: "Bookings deleted successfully",
+    BOOKINGS_FETCHED_SUCCESSFULLY: "Bookings fetched successfully",
+    CUSTOMER_NOT_FOUND: "Customer not found",
+    BOOKINGS_CREATED_SUCCESSFULLY: "Bookings created successfully",
+    CATEGORIES_FETCHED_SUCCESSFULLY: "Categories fetched successfully",
+    EMAIL_AND_PASSWORD_REQUIRED: "Email and password are required",
+    INVALID_CREDENTIALS: "Invalid credentials",    
+    LOGIN_SUCCESS: "Login Success",
+    LOGIN_ERROR: "Login Error",
+    LOGOUT_SUCCESS: "Logout Success",
+    SUBCATEGORIES_FETCHED_SUCCESSFULLY: "Subcategories fetched successfully",
+    SUBCATEGORY_ID_REQUIRED: "Subcategory ID is required",
+    SUBCATEGORY_NOT_FOUND: "Subcategory not found",
+    SUBCATEGORY_DELETED_SUCCESSFULLY: "Subcategory deleted successfully",
+    FAILED_TO_DELETE_SUBCATEGORY: "Failed to delete subcategory",
+    MISSING_REQUIRED_FIELDS: "categoryId, name, and imageUrl are required",
+    SUBCATEGORY_WITH_SAME_NAME_ALREADY_EXISTS: "Subcategory with this name already exists for this category",
+    SUBCATEGORY_CREATED_SUCCESSFULLY: "Subcategory created successfully",
+    AWS_CREDENTIALS_NOT_CONFIGURED: "AWS credentials not configured",
+    NO_FILE_PROVIDED: "No file provided",
+    INVALID_UPLOAD_TYPE: "Valid upload type is required (cloth or document)",
+    INVALID_METADATA_FORMAT: "Invalid metadata format",
+    METADATA_IS_REQUIRED: "Metadata is required",
+    FILE_NAME_AND_FILE_TYPE_REQUIRED: "fileName and fileType are required",
+    INVALID_FILE_TYPE: "Invalid file type for upload. Only images (JPEG, PNG, GIF, WebP) are allowed.",
+}
