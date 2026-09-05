@@ -20,6 +20,14 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Deploying to Render
+
+This repository includes a `render.yaml` Blueprint for a Node Web Service. Create a new Blueprint service in Render from the repository; it will use `npm ci && npm run build` and `npm run start` on Node 22.
+
+Set the secret values marked `sync: false` in the Render dashboard: `MONGODB_URI`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_S3_BUCKET_NAME`. Render generates `JWT_SECRET` automatically.
+
+For MongoDB Atlas, allow the Render service to connect in Atlas Network Access. The API and frontend are served by the same Render service, so `NEXT_PUBLIC_APP_BASE_URL` is normally not needed. Uploads also require the configured AWS IAM user to have access to the configured S3 bucket.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

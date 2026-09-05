@@ -8,7 +8,9 @@ import axios, { AxiosRequestConfig } from "axios";
  * Create an Axios Client with defaults
  */
 const client = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_APP_BASE_URL,
+    // An empty base URL keeps browser requests on the current deployment.
+    // This avoids baking a localhost URL into the production client bundle.
+    baseURL: process.env.NEXT_PUBLIC_APP_BASE_URL || "",
 });
 
 // Set the auth token for any request

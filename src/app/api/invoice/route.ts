@@ -13,8 +13,10 @@ import { STATUS_CODE } from "@/utils/constant";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-function isProdLike() {
+function usesServerlessChromium() {
   return (
+    process.env.RENDER === "true" ||
+    process.env.RENDER_SERVICE_ID !== undefined ||
     !!process.env.AWS_LAMBDA_FUNCTION_VERSION ||
     process.env.VERCEL === "1"
   );
@@ -27,7 +29,7 @@ async function getExecutablePath() {
   }
 
   // 2. Serverless → use @sparticuz/chromium
-  if (isProdLike()) {
+  if (usesServerlessChromium()) {
     return await chromium.executablePath();
   }
 
@@ -70,10 +72,10 @@ export async function POST(req: NextRequest) {
 
     const browser = await puppeteer.launch({
       executablePath: await getExecutablePath(),
-      args: isProdLike()
+      args: usesServerlessChromium()
         ? chromium.args
         : ["--no-sandbox", "--disable-setuid-sandbox"],
-      headless: isProdLike() ? true : true, // or false based on your requirement
+      headless: true,
       defaultViewport: { width: 1200, height: 800, deviceScaleFactor: 2 },
     });
 

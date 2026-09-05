@@ -12,16 +12,8 @@ export async function POST(req: NextRequest) {
   const { email, password } = await req.json();
   const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
   const normalizedPassword = typeof password === 'string' ? password.trim() : '';
-  const fallbackAdminEmail = (process.env.ADMIN_EMAIL || 'admin@local').trim().toLowerCase();
-  const fallbackAdminPassword = process.env.ADMIN_PASSWORD || 'StrongPass123!';
-  const seededAdmins = [
-    { email: 'superadmin@maarasgarba.com', password: 'Sup3r@dm!n#2025!' },
-    { email: 'user1@maarasgarba.com', password: 'Adm!n#User1@2025$' },
-    { email: 'user2@maarasgarba.com', password: 'Adm!n#User2@2025$' },
-    { email: 'user3@maarasgarba.com', password: 'Adm!n#User3@2025$' },
-    { email: 'user4@maarasgarba.com', password: 'Adm!n#User4@2025$' },
-    { email: 'user5@maarasgarba.com', password: 'Adm!n#User5@2025$' },
-  ];
+  const fallbackAdminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+  const fallbackAdminPassword = process.env.ADMIN_PASSWORD;
 
   if (!normalizedEmail || !normalizedPassword) {
     return NextResponse.json(
@@ -40,21 +32,13 @@ export async function POST(req: NextRequest) {
     console.error('MongoDB unavailable during login, using fallback auth:', dbError);
   }
 
-  const seededAdmin = seededAdmins.find((entry) => entry.email === normalizedEmail && entry.password === normalizedPassword);
-
-  if (!user && seededAdmin) {
-    isFallbackAdmin = true;
-    user = {
-      _id: 'fallback-admin',
-      name: 'Admin',
-      email: normalizedEmail,
-      password: await bcrypt.hash(seededAdmin.password, 10),
-      isAdmin: true,
-      isSuperAdmin: normalizedEmail === 'superadmin@maarasgarba.com',
-    };
-  }
-
-  if (!user && normalizedEmail === fallbackAdminEmail && normalizedPassword === fallbackAdminPassword) {
+  if (
+    !user &&
+    fallbackAdminEmail &&
+    fallbackAdminPassword &&
+    normalizedEmail === fallbackAdminEmail &&
+    normalizedPassword === fallbackAdminPassword
+  ) {
     isFallbackAdmin = true;
     user = {
       _id: 'fallback-admin',
