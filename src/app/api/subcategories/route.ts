@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { NextRequest, NextResponse } from 'next/server';
+import mongoose from 'mongoose';
 import { connectMongoDB } from '@/lib/db/mongo';
 import SubCategory from '@/models/subcategories';
 import { MESSAGES, STATUS_CODE } from '@/utils/constant';
@@ -71,42 +72,36 @@ export async function GET(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
     try {
         await connectMongoDB();
-        
+
         const { searchParams } = new URL(request.url);
         const id = searchParams.get('id');
-        const userId = searchParams.get('userId'); // Optional: pass user ID for deleted_by
-        
-        if (!id) {
+
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
             return NextResponse.json(
-                { error: MESSAGES.SUBCATEGORY_ID_REQUIRED, status: STATUS_CODE.ERROR },
+                { error: MESSAGES.SUBCATEGORY_ID_REQUIRED, message: MESSAGES.SUBCATEGORY_ID_REQUIRED, status: STATUS_CODE.ERROR },
+                { status: STATUS_CODE.ERROR },
             );
         }
-        
-        // Soft delete: update deleted_at and deleted_by fields
-        const deletedSubCategory = await SubCategory.findByIdAndUpdate(
-            id,
-            {
-                deleted_at: new Date(),
-                deleted_by: userId || null
-            },
-            { new: true }
-        );
-        
+
+        const deletedSubCategory = await SubCategory.findByIdAndDelete(id);
+
         if (!deletedSubCategory) {
             return NextResponse.json(
-                { error: MESSAGES.SUBCATEGORY_NOT_FOUND, status: STATUS_CODE.NOT_FOUND },
+                { error: MESSAGES.SUBCATEGORY_NOT_FOUND, message: MESSAGES.SUBCATEGORY_NOT_FOUND, status: STATUS_CODE.NOT_FOUND },
+                { status: STATUS_CODE.NOT_FOUND },
             );
         }
-        
+
         return NextResponse.json({
             message: MESSAGES.SUBCATEGORY_DELETED_SUCCESSFULLY,
             deletedSubCategory
         });
-        
+
     } catch (error) {
         console.error('Error deleting subcategory:', error);
         return NextResponse.json(
-            { error: MESSAGES.FAILED_TO_DELETE_SUBCATEGORY, status: STATUS_CODE.INTERNAL_SERVER_ERROR },
+            { error: MESSAGES.FAILED_TO_DELETE_SUBCATEGORY, message: MESSAGES.FAILED_TO_DELETE_SUBCATEGORY, status: STATUS_CODE.INTERNAL_SERVER_ERROR },
+            { status: STATUS_CODE.INTERNAL_SERVER_ERROR },
         );
     }
 }
