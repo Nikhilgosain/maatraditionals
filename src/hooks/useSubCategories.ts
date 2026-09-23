@@ -189,10 +189,13 @@ export function useSubCategories(params: UseSubCategoriesParams | string | null)
         urlObj.searchParams.append('userId', userId);
       }
 
-      // Service.remove will throw an error for non-2xx responses
       const response = await Service.remove(urlObj.toString());
-      
-      // If we get here, the request was successful
+
+      // Guard against error payloads returned with a 2xx status
+      if (response?.error || (typeof response?.status === 'number' && response.status >= 400)) {
+        throw new Error(response.error || response.message || 'Failed to delete record');
+      }
+
       showAppToast("Record deleted successfully", "success");
       return response;
     } catch (err) {
