@@ -90,12 +90,12 @@ export default function Upload() {
                         <div>
                             <label className="block text-gray-700 mb-1 font-medium">Sr. No.</label>
                             <input 
-                                type="number" 
+                                type="text" 
                                 name="serialNumber"
                                 value={formData.serialNumber}
                                 onChange={handleInputChange}
                                 className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-yellow-400 focus:outline-none" 
-                                placeholder="Enter Sr. No." 
+                                placeholder="Enter Sr. No. (e.g. 101, BK-01, A-05)" 
                             />
                         </div>
                     </div>

@@ -15,7 +15,7 @@ export interface BookingSummary {
   subCategoryId: {
     _id: string;
     name: string;
-    serialNumber: number;
+    serialNumber?: string | number;
     categoryId: {
       _id: string;
       name: string;

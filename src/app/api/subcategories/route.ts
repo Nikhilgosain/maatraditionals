@@ -26,13 +26,18 @@ export async function GET(request: NextRequest) {
         }
         
         if (search) {
-            query.$or = [
-                { name: { $regex: search, $options: 'i' } },
-                // Only use regex for string fields, for numbers try exact match
-                ...(isNaN(Number(search)) 
-                    ? [] 
-                    : [{ serialNumber: Number(search) }])
+            const trimmedSearch = search.trim();
+            const escapedSearch = trimmedSearch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const searchOr: any[] = [
+                { name: { $regex: escapedSearch, $options: 'i' } },
+                { serialNumber: { $regex: escapedSearch, $options: 'i' } },
             ];
+
+            if (!isNaN(Number(trimmedSearch))) {
+                searchOr.push({ serialNumber: Number(trimmedSearch) });
+            }
+
+            query.$or = searchOr;
         }
         
         // Calculate pagination
@@ -137,7 +142,7 @@ export async function POST(req: NextRequest) {
       categoryId,
       name,
       imageUrl,
-      serialNumber: serialNumber || undefined
+      serialNumber: typeof serialNumber === 'string' ? serialNumber.trim() : serialNumber || undefined
     });
 
     const savedSubCategory = await newSubCategory.save();
