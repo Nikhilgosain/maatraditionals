@@ -53,7 +53,7 @@ export function useSubcategoryUpload(): UseSubcategoryUploadReturn {
         categoryId: formData.categoryId,
         name: formData.subcategoryName,
         imageUrl: uploadResult.data.fileUrl,
-        serialNumber: formData.serialNumber ? parseInt(formData.serialNumber) : undefined
+        serialNumber: formData.serialNumber?.trim() || undefined
       };
 
       const saveResult = await Service.post({

@@ -10,7 +10,7 @@ interface SubCategory {
   _id: string;
   name: string;
   categoryId: string;
-  serialNumber: number;
+  serialNumber?: string | number;
   imageUrl: any;
   createdAt: string;
 }

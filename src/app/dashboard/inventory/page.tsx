@@ -1,17 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { useCategories } from '@/hooks/useCategories';
+import { useCategories, Category } from '@/hooks/useCategories';
 import { useSubCategories } from '@/hooks/useSubCategories';
 import { getCurrentUserId } from '@/utils/auth';
 import Pagination from "@/components/common/Pagination";
 import Image from 'next/image';
+import { Plus } from 'lucide-react';
+import AddCategoryDialog from '@/components/inventory/AddCategoryDialog';
 
 export default function Inventory() {
-    const { categories, isLoading: categoriesLoading, error: categoriesError } = useCategories();
+    const { categories, isLoading: categoriesLoading, error: categoriesError, createCategory } = useCategories();
     const [selectedCategoryId, setSelectedCategoryId] = useState<string>('');
     const [searchText, setSearchText] = useState<string>('');
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const [isAddCategoryOpen, setIsAddCategoryOpen] = useState<boolean>(false);
     const { subCategories, pagination, loading: subCategoriesLoading, error: subCategoriesError, refetch, deleteSubCategory } = useSubCategories({
         categoryId: selectedCategoryId || null,
         search: searchText,
@@ -56,6 +59,11 @@ export default function Inventory() {
         }
     };
 
+    const handleCategoryCreated = (newCategory: Category) => {
+        setSelectedCategoryId(newCategory._id);
+        setCurrentPage(1);
+    };
+
     const getCategoryName = (categoryId: string) => {
         const category = categories.find(cat => cat._id === categoryId);
         return category ? category.name : 'Unknown';
@@ -65,8 +73,21 @@ export default function Inventory() {
         <div className="space-y-6 text-black">
             {/* Search Card */}
             <div className="bg-white rounded-xl shadow-md p-6">
-                <h2 className="text-xl font-semibold mb-4">Search Uploads</h2>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+                    <div>
+                        <h2 className="text-xl font-semibold">Search Uploads</h2>
+                        <p className="text-sm text-gray-500">Filter subcategories by category or search by item</p>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => setIsAddCategoryOpen(true)}
+                        className="inline-flex items-center justify-center gap-2 bg-red-700 hover:bg-red-800 text-white font-medium px-4 py-2.5 rounded-lg shadow-sm hover:shadow transition-all duration-150 active:scale-95 cursor-pointer self-start sm:self-auto"
+                    >
+                        <Plus className="w-4 h-4" />
+                        <span>Add Category</span>
+                    </button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                     <div>
                         <label className="block text-gray-700 mb-1 font-medium">Category</label>
                         <select
@@ -102,7 +123,7 @@ export default function Inventory() {
                         <button
                             type="button"
                             onClick={handleClearFilters}
-                            className="bg-gray-500 text-white w-full px-6 py-2 rounded-lg hover:bg-gray-600 transition"
+                            className="bg-gray-500 text-white w-full px-6 py-2 rounded-lg hover:bg-gray-600 transition cursor-pointer"
                         >
                             Clear All
                         </button>
@@ -204,6 +225,14 @@ export default function Inventory() {
                 )}
 
             </div>
+
+            {/* Add Category Dialog Modal */}
+            <AddCategoryDialog
+                open={isAddCategoryOpen}
+                onOpenChange={setIsAddCategoryOpen}
+                createCategory={createCategory}
+                onSuccess={handleCategoryCreated}
+            />
 
         </div>
     );
